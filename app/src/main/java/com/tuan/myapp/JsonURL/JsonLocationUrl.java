@@ -19,7 +19,6 @@ public class JsonLocationUrl {
 
     public JsonLocationUrl() {
 
-
     }
 
     public String getJson(double lat, double lng) throws IOException {

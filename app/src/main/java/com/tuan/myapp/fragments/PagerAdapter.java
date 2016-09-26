@@ -5,7 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.tuan.myapp.MyMapFragment;
+import com.tuan.myapp.Controller.MyListFragment;
+import com.tuan.myapp.Controller.MyMapFragment;
 import com.tuan.myapp.R;
 
 /**

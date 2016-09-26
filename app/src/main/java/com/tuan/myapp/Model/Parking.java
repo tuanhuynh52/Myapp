@@ -1,4 +1,4 @@
-package com.tuan.myapp;
+package com.tuan.myapp.Model;
 
 /**
  * Created by Tuan on 9/23/2016.
@@ -14,6 +14,8 @@ public class Parking {
     private String formatted_price;
     private int location_id, listing_id, availableSpot;
     private double price, gotLat, gotLng;
+
+    private static int numOfLocations;
 
     public Parking(String city, String name, String address, String state, String zip, String formatted_price,
                    int location_id, int listing_id, int availableSpot,
@@ -128,6 +130,14 @@ public class Parking {
         this.gotLng = gotLng;
     }
 
+    public static int getNumOfLocations() {
+        return numOfLocations;
+    }
+
+    public static void setNumOfLocations(int numOfLocations) {
+        Parking.numOfLocations = numOfLocations;
+    }
+
     @Override
     public String toString() {
         return "Parking{" +
@@ -145,7 +155,5 @@ public class Parking {
                 ", gotLng=" + gotLng +
                 '}';
     }
-
-
 
 }

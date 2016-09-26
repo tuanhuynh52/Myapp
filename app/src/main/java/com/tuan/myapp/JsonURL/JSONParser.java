@@ -3,7 +3,7 @@ package com.tuan.myapp.JsonURL;
 import android.content.Context;
 import android.util.Log;
 
-import com.tuan.myapp.Parking;
+import com.tuan.myapp.Model.Parking;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +22,9 @@ public class JSONParser {
     private String content;
     private Context context;
     private int numberOfLocation;
+    private List<Parking> PARKING_DATA;
+
+
     public JSONParser(String content){
         this.content = content;
     }
@@ -70,7 +73,4 @@ public class JSONParser {
         return null;
     }
 
-    public int passData(){
-        return numberOfLocation;
-    }
 }

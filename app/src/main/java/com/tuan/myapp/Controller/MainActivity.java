@@ -1,4 +1,4 @@
-package com.tuan.myapp;
+package com.tuan.myapp.Controller;
 
 import android.Manifest;
 import android.content.Intent;
@@ -35,6 +35,7 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
+import com.tuan.myapp.R;
 import com.tuan.myapp.fragments.PagerAdapter;
 
 public class MainActivity extends AppCompatActivity
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabStrip;
+    private PagerAdapter myPageAdater;
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     private static final String TAG = "MainActivity";
@@ -50,7 +52,6 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private LocationInfo locationInfo;
     private double lat, lng;
     private LatLng latLng;
     private String name;
@@ -63,12 +64,38 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        locationInfo = new LocationInfo();
-
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
-
+        myPageAdater = new PagerAdapter(getSupportFragmentManager());
         tabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
+        tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    MyMapFragment myMapFragment = new MyMapFragment();
+                    double defaultLat  = 41.8857256;
+                    double defaultLng  = -87.6369590;
+                    myMapFragment.setLat(defaultLat);
+                    myMapFragment.setLng(defaultLng);
+                    fm.beginTransaction().replace(R.id.main_container, myMapFragment).commit();
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    MyListFragment listFragment = new MyListFragment();
+                    fm.beginTransaction().replace(R.id.main_container, listFragment).commit();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        viewPager.setAdapter(myPageAdater);
         tabStrip.setViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -83,14 +110,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        FragmentManager fm = getSupportFragmentManager();
-        MyMapFragment myMapFragment = new MyMapFragment();
-        double defaultLat  = 41.8857256;
-        double defaultLng  = -87.6369590;
-
-        myMapFragment.setLat(defaultLat);
-        myMapFragment.setLng(defaultLng);
-        fm.beginTransaction().replace(R.id.main_container, myMapFragment).commit();
+//        FragmentManager fm = getSupportFragmentManager();
+//        MyMapFragment myMapFragment = new MyMapFragment();
+//        double defaultLat  = 41.8857256;
+//        double defaultLng  = -87.6369590;
+//
+//        myMapFragment.setLat(defaultLat);
+//        myMapFragment.setLng(defaultLng);
+//        fm.beginTransaction().replace(R.id.main_container, myMapFragment).commit();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.PLACE_DETECTION_API)
@@ -123,8 +150,11 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        FragmentManager fm = getSupportFragmentManager();
+
         //noinspection SimplifiableIfStatement
         switch (id){
+
             case R.id.action_search:
                 try {
                     AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -168,9 +198,7 @@ public class MainActivity extends AppCompatActivity
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
                     latLng = placeLikelihood.getPlace().getLatLng();
-                    locationInfo = new LocationInfo();
-                    locationInfo.setLat(latLng.latitude);
-                    locationInfo.setLng(latLng.longitude);
+
                 }
                 likelyPlaces.release();
             }
@@ -193,6 +221,7 @@ public class MainActivity extends AppCompatActivity
 
                 lat = latLng.latitude;
                 lng = latLng.longitude;
+
 //                Toast.makeText(this, "lat: "+lat + "\n"+"lng: "+
 //                        lng, Toast.LENGTH_LONG).show();
                 //map view
